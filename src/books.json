@@ -1,0 +1,94 @@
+{
+  "books": [
+    {
+      "id": "1",
+      "title": "To Kill a Mockingbird",
+      "author": "Harper Lee",
+      "year": 1960,
+      "genre": "novel",
+      "favourite": false,
+      "cover": "https://images.gr-assets.com/books/1361975680l/2657.jpg"
+    },
+    {
+      "title": "1984",
+      "id": "2",
+      "author": "George Orwell",
+      "year": 1949,
+      "genre": "novel",
+      "favourite": true,
+      "cover": "https://images.gr-assets.com/books/1348990566l/5470.jpg"
+    },
+    {
+      "title": "Brave New World",
+      "id": "3",
+      "author": "Aldous Huxley",
+      "year": 1932,
+      "genre": "novel",
+      "favourite": true,
+      "cover": "https://images.gr-assets.com/books/1424030967l/5129.jpg"
+    },
+    {
+      "title": "Pride and Prejudice",
+      "id": "4",
+      "author": "Jane Austen",
+      "year": 1813,
+      "genre": "love",
+      "favourite": false,
+      "cover": "https://images.gr-assets.com/books/1320399351l/1885.jpg"
+    },
+    {
+      "title": "The Catcher in the Rye",
+      "id": "5",
+      "author": "J.D. Salinger",
+      "year": 1951,
+      "genre": "novel",
+      "favourite": false,
+      "cover": "https://images.gr-assets.com/books/1398034300l/5107.jpg"
+    },
+    {
+      "title": "The Great Gatsby",
+      "id": "6",
+      "author": "F. Scott Fitzgerald",
+      "year": 1925,
+      "genre": "love",
+      "favourite": true,
+      "cover": "https://images.gr-assets.com/books/1490528560l/4671.jpg"
+    },
+    {
+      "title": "Animal Farm",
+      "id": "7",
+      "author": "George Orwell",
+      "year": 1945,
+      "genre": "novel",
+      "favourite": false,
+      "cover": "https://images.gr-assets.com/books/1424039022l/170448.jpg"
+    },
+    {
+      "title": "The Lord of the Rings",
+      "id": "8",
+      "author": "J.R.R. Tolkien",
+      "year": 1954,
+      "genre": "fantasy",
+      "favourite": true,
+      "cover": "https://images.gr-assets.com/books/1368749842l/33.jpg"
+    },
+    {
+      "title": "Harry Potter and the Philosopher's Stone",
+      "id": "9",
+      "author": "J.K. Rowling",
+      "year": 1997,
+      "genre": "fantasy",
+      "favourite": true,
+      "cover": "https://images.gr-assets.com/books/1474154022l/3.jpg"
+    },
+    {
+      "title": "The Hobbit",
+      "id": "10",
+      "author": "J.R.R. Tolkien",
+      "year": 1937,
+      "genre": "fantasy",
+      "favourite": true,
+      "cover": "https://images.gr-assets.com/books/1448613663l/5907.jpg"
+    }
+  ]
+}
