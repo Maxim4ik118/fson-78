@@ -9,6 +9,7 @@ function BookList({ books, onRemoveBook, onOpenModal }) {
           <button onClick={() => onRemoveBook(book.id)}>&times;</button>
           <button onClick={() => onOpenModal(book)}>
             OPEN MODAL WITH DETAILS
+            
           </button>
           <h3>Title: {book.title}</h3>
           <h4>Author: {book.author}</h4>

@@ -17,26 +17,10 @@ class Modal extends React.Component {
   };
 
   componentDidMount() {
-    /*
-    Спрацьовує після того, як відмалювалась розмітка компоненту.
-          Коли його використовують:
-          1. Коли нам потрібно ВСТАНОВИТИ глобальні слухачі подій addEventListener
-          2. Коли нам потрібно зробити HTTP запит
-          3. Коли дістати дані з localStorage
-          4. Коли ми встановлємо таймери, або інтервали (setTimeout, setInterval)
-    */
-
     window.addEventListener('keydown', this.handleKeyDown);
   }
 
   componentWillUnmount() {
-    /*
-    Спрацьовує перед тим, як реакт повністю видалить компонент з розмітки(DOM).
-     Коли його використовують:
-          1. Коли нам потрібно ПРИБРАТИ глобальні слухачі подій removeEventListener
-          2. Коли нам потрібно ВІДХИЛИТИ HTTP запит
-          3. Коли ми ОЧИЩАЄМО таймери, або інтервали (clearTimeout, clearInterval)
-    */
     window.removeEventListener('keydown', this.handleKeyDown);
   }
 

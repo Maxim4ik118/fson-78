@@ -13,3 +13,20 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.c-error {
+  background-color: rgb(212, 116, 0);
+  color: black;
+  padding: 20px 20px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+}
+
+.post {
+  margin-bottom: 35px;
+  background-color: transparent;
+  cursor: pointer;
+}

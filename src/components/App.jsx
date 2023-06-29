@@ -1,36 +1,34 @@
 import React from 'react';
+import { MutatingDots } from 'react-loader-spinner';
+import { toast } from 'react-toastify';
 
-import BookForm from './BookForm/BookForm';
-import BookList from './BookList/BookList';
+// import BookForm from './BookForm/BookForm';
+// import BookList from './BookList/BookList';
 import Modal from './Modal/Modal';
 
-import booksData from '../books.json';
+// import booksData from '../books.json';
+import { fetchPostDetails, fetchPosts } from 'services/api';
 
-const books = booksData.books;
+// const books = booksData.books;
+
+const toastConfig = {
+  position: 'top-center',
+  autoClose: 5000,
+  hideProgressBar: false,
+  closeOnClick: true,
+  pauseOnHover: true,
+  draggable: true,
+  progress: undefined,
+  theme: 'dark',
+};
 
 export class App extends React.Component {
   state = {
-    books: books,
-    // [{ id: 1 }, { id: 2 }, { id: 3 }, {id: 4}]
-    // [{ id: 1 }, { id: 2 }, { id: 3 }, {id: 4}, {id: 5}]
     modal: { isOpen: false, visibleData: null },
-  };
-
-  onRemoveBook = bookId => {
-    this.setState({
-      books: this.state.books.filter(book => book.id !== bookId), // [{ id: 1 }, { id: 3 }]
-    });
-  };
-
-  onAddBook = bookData => {
-    const finalBook = {
-      ...bookData,
-      id: (Math.random() * 10).toString(),
-    };
-
-    this.setState({
-      books: [finalBook, ...this.state.books],
-    });
+    posts: [],
+    isLoading: false,
+    error: null,
+    selectedPostId: null,
   };
 
   onOpenModal = data => {
@@ -51,39 +49,88 @@ export class App extends React.Component {
     });
   };
 
-  componentDidMount() {
-    const stringifiedBooks = localStorage.getItem('books');
-    const books = JSON.parse(stringifiedBooks) ?? [];
+  onSelectPostId = postId => {
+    this.setState({ selectedPostId: postId });
+  };
 
-    this.setState({ books });
+  async componentDidMount() {
+    try {
+      this.setState({ isLoading: true });
+      const posts = await fetchPosts();
+      this.setState({ posts });
+      toast.success('Your posts were successfully fetched!', toastConfig);
+    } catch (error) {
+      this.setState({ error: error.message });
+      toast.error(error.message, toastConfig);
+    } finally {
+      this.setState({ isLoading: false });
+    }
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  async componentDidUpdate(prevProps, prevState) {
     if (prevState.modal.isOpen !== this.state.modal.isOpen) {
       console.log('МИ ВІДКРИЛИ АБО ЗАКРИЛИ МОДАЛКУ');
     }
 
-    if (prevState.books.length !== this.state.books.length) {
-      const stringifiedBooks = JSON.stringify(this.state.books);
-      localStorage.setItem('books', stringifiedBooks);
+    if (prevState.selectedPostId !== this.state.selectedPostId) {
+      try {
+        this.setState({ isLoading: true });
+        const postDetails = await fetchPostDetails(this.state.selectedPostId);
+        this.setState({ modal: { isOpen: true, visibleData: postDetails } });
+        toast.success('Post details were successfully fetched!', toastConfig);
+      } catch (error) {
+        this.setState({ error: error.message });
+        toast.error(error.message, toastConfig);
+      } finally {
+        this.setState({ isLoading: false });
+      }
     }
   }
 
   render() {
     return (
       <div>
+        <h1>Мій олюблений Реакт😂</h1>
         {this.state.modal.isOpen && (
           <Modal
             onCloseModal={this.onCloseModal}
             visibleData={this.state.modal.visibleData}
           />
         )}
-        <BookForm title="BookForm" onAddBook={this.onAddBook} />
-        <BookList
-          onOpenModal={this.onOpenModal}
-          onRemoveBook={this.onRemoveBook}
-          books={this.state.books}
-        />
+        {this.state.error !== null && (
+          <p className="c-error">
+            Oops, some error occured. Please, try again later. Error:{' '}
+            {this.state.error}
+          </p>
+        )}
+        {this.state.isLoading && (
+          <MutatingDots
+            height="100"
+            width="100"
+            color="#5800a5"
+            secondaryColor="#e08e00"
+            radius="12.5"
+            ariaLabel="mutating-dots-loading"
+            wrapperStyle={{}}
+            wrapperClass=""
+            visible={true}
+          />
+        )}
+        {this.state.posts.length > 0 &&
+          this.state.posts.map(post => {
+            return (
+              <button
+                className="post"
+                onClick={() => this.onSelectPostId(post.id)}
+                type="button"
+                key={post.id}
+              >
+                <strong>Id: {post.id}</strong>
+                <h4>{post.title}</h4>
+                <p>{post.body}</p>
+              </button>
+            );
+          })}
       </div>
     );
   }
