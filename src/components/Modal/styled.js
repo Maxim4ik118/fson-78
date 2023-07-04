@@ -7,6 +7,14 @@ export const StyledOverlay = styled.div`
   top: 0;
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.7);
+  .tab-btn.active {
+    background-color: rgba(0, 0, 0, 0.7);
+    color: #fff;
+  }
+  .tab-btn {
+    background-color: beige;
+    color: #000;
+  }
 `;
 export const StyledModal = styled.div`
   position: absolute;
@@ -16,4 +24,6 @@ export const StyledModal = styled.div`
   background-color: #fff;
   border-radius: 15px;
   padding: 25px;
+  max-height: 550px;
+  overflow-y: auto;
 `;

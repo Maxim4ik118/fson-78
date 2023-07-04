@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { MutatingDots } from 'react-loader-spinner';
 import { toast } from 'react-toastify';
 
@@ -22,116 +22,112 @@ const toastConfig = {
   theme: 'dark',
 };
 
-export class App extends React.Component {
-  state = {
-    modal: { isOpen: false, visibleData: null },
-    posts: [],
-    isLoading: false,
-    error: null,
-    selectedPostId: null,
-  };
+export const App = () => {
+  const [modal, setModal] = useState({ isOpen: false, visibleData: null });
+  const [posts, setPosts] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [selectedPostId, setSelectedPostId] = useState(null);
 
-  onOpenModal = data => {
-    this.setState({
-      modal: {
-        isOpen: true,
-        visibleData: data,
-      },
+  const onOpenModal = data => {
+    setModal({
+      isOpen: true,
+      visibleData: data,
     });
   };
 
-  onCloseModal = () => {
-    this.setState({
-      modal: {
-        isOpen: false,
-        visibleData: null,
-      },
+  const onCloseModal = () => {
+    setModal({
+      isOpen: false,
+      visibleData: null,
     });
   };
 
-  onSelectPostId = postId => {
-    this.setState({ selectedPostId: postId });
+  const onSelectPostId = postId => {
+    setSelectedPostId(postId);
   };
 
-  async componentDidMount() {
-    try {
-      this.setState({ isLoading: true });
-      const posts = await fetchPosts();
-      this.setState({ posts });
-      toast.success('Your posts were successfully fetched!', toastConfig);
-    } catch (error) {
-      this.setState({ error: error.message });
-      toast.error(error.message, toastConfig);
-    } finally {
-      this.setState({ isLoading: false });
-    }
-  }
-
-  async componentDidUpdate(prevProps, prevState) {
-    if (prevState.modal.isOpen !== this.state.modal.isOpen) {
-      console.log('МИ ВІДКРИЛИ АБО ЗАКРИЛИ МОДАЛКУ');
-    }
-
-    if (prevState.selectedPostId !== this.state.selectedPostId) {
+  useEffect(() => {
+    const fetchPostsData = async () => {
       try {
-        this.setState({ isLoading: true });
-        const postDetails = await fetchPostDetails(this.state.selectedPostId);
-        this.setState({ modal: { isOpen: true, visibleData: postDetails } });
-        toast.success('Post details were successfully fetched!', toastConfig);
+        setIsLoading(true);
+
+        const posts = await fetchPosts();
+
+        setPosts(posts);
+        toast.success('Your posts were successfully fetched!', toastConfig);
       } catch (error) {
-        this.setState({ error: error.message });
+        setError(error.message);
         toast.error(error.message, toastConfig);
       } finally {
-        this.setState({ isLoading: false });
+        setIsLoading(false);
       }
-    }
-  }
+    };
 
-  render() {
-    return (
-      <div>
-        <h1>Мій олюблений Реакт😂</h1>
-        {this.state.modal.isOpen && (
-          <Modal
-            onCloseModal={this.onCloseModal}
-            visibleData={this.state.modal.visibleData}
-          />
-        )}
-        {this.state.error !== null && (
-          <p className="c-error">
-            Oops, some error occured. Please, try again later. Error:{' '}
-            {this.state.error}
-          </p>
-        )}
-        {this.state.isLoading && (
-          <MutatingDots
-            height="100"
-            width="100"
-            color="#5800a5"
-            secondaryColor="#e08e00"
-            radius="12.5"
-            ariaLabel="mutating-dots-loading"
-            wrapperStyle={{}}
-            wrapperClass=""
-            visible={true}
-          />
-        )}
-        {this.state.posts.length > 0 &&
-          this.state.posts.map(post => {
-            return (
-              <button
-                className="post"
-                onClick={() => this.onSelectPostId(post.id)}
-                type="button"
-                key={post.id}
-              >
-                <strong>Id: {post.id}</strong>
-                <h4>{post.title}</h4>
-                <p>{post.body}</p>
-              </button>
-            );
-          })}
-      </div>
-    );
-  }
-}
+    fetchPostsData();
+  }, []);
+
+  useEffect(() => {
+    if (!selectedPostId) return;
+
+    const fetchPostData = async postId => {
+      try {
+        setIsLoading(true);
+
+        const postDetails = await fetchPostDetails(postId);
+
+        onOpenModal(postDetails);
+        toast.success('Post details were successfully fetched!', toastConfig);
+      } catch (error) {
+        setError(error.message);
+        toast.error(error.message, toastConfig);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchPostData(selectedPostId);
+  }, [selectedPostId]);
+
+  return (
+    <div>
+      <h1>Мій олюблений Реакт😂</h1>
+      {modal.isOpen && (
+        <Modal onCloseModal={onCloseModal} visibleData={modal.visibleData} />
+      )}
+      {error !== null && (
+        <p className="c-error">
+          Oops, some error occured. Please, try again later. Error: {error}
+        </p>
+      )}
+      {isLoading && (
+        <MutatingDots
+          height="100"
+          width="100"
+          color="#5800a5"
+          secondaryColor="#e08e00"
+          radius="12.5"
+          ariaLabel="mutating-dots-loading"
+          wrapperStyle={{}}
+          wrapperClass=""
+          visible={true}
+        />
+      )}
+      {posts.length > 0 &&
+        posts.map(post => {
+          return (
+            <button
+              className="post"
+              onClick={() => onSelectPostId(post.id)}
+              type="button"
+              key={post.id}
+            >
+              <strong>Id: {post.id}</strong>
+              <h4>{post.title}</h4>
+              <p>{post.body}</p>
+            </button>
+          );
+        })}
+    </div>
+  );
+};
