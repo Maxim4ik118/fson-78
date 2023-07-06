@@ -6,10 +6,11 @@ import { App } from 'components/App';
 
 import 'react-toastify/dist/ReactToastify.css';
 import './index.css';
+import { BookContextProvider } from 'context/BooksContext';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   // <React.StrictMode>
-  <div>
+  <BookContextProvider>
     <App />
     <ToastContainer
       position="top-center"
@@ -23,6 +24,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       pauseOnHover
       theme="dark"
     />
-  </div>
+  </BookContextProvider>
   // </React.StrictMode>
 );

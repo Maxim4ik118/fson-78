@@ -1,22 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import BookItem from 'components/BookItem/BookItem';
 
-function BookList({ books, onRemoveBook, onOpenModal }) {
+function BookList({ books, onRemoveBook }) {
   return (
     <ul>
       {books.map(book => (
-        <li key={book.id}>
-          <button onClick={() => onRemoveBook(book.id)}>&times;</button>
-          <button onClick={() => onOpenModal(book)}>
-            OPEN MODAL WITH DETAILS
-            
-          </button>
-          <h3>Title: {book.title}</h3>
-          <h4>Author: {book.author}</h4>
-          <p>Year: {book.year}</p>
-          <p>Genre: {book.genre}</p>
-          <p>Favourite: {book.favourite ? '❤' : '-'}</p>
-        </li>
+        <BookItem
+          book={book}
+          onRemoveBook={onRemoveBook}
+        />
       ))}
     </ul>
   );

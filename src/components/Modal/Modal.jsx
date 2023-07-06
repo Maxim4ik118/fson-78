@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import { StyledModal, StyledOverlay } from './styled';
@@ -6,7 +6,9 @@ import { StyledModal, StyledOverlay } from './styled';
 // а чому ми не можем залишити просто import react from …, а потрібно окремо добавити в {}?
 
 const Modal = ({ visibleData, onCloseModal }) => {
-  const [dataType, setDataType] = useState('emails'); // "emails" | "users"
+  const [dataType, setDataType] = useState('emails');
+  // const btnEmailsRef = useRef();
+  // const btnUsersRef = useRef();
 
   const handleOverlayClick = event => {
     if (event.currentTarget === event.target) {
@@ -23,22 +25,9 @@ const Modal = ({ visibleData, onCloseModal }) => {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => {
-      // componentWillUnmount
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [onCloseModal]); // componentDidMount
-
-  useEffect(() => {
-    console.log("Current dataType: ", dataType);
-  }, [dataType]) // componentDidMount + componentDidUpdate
-
-  // componentDidMount() {
-  //   window.addEventListener('keydown', this.handleKeyDown);
-  // }
-
-  // componentWillUnmount() {
-  //   window.removeEventListener('keydown', this.handleKeyDown);
-  // }
+  }, [onCloseModal]);
 
   return (
     <StyledOverlay onClick={handleOverlayClick}>
@@ -48,7 +37,11 @@ const Modal = ({ visibleData, onCloseModal }) => {
         <div>
           <button
             className={`tab-btn ${dataType === 'emails' ? 'active' : ''}`}
-            onClick={() => setDataType('emails')}
+            onClick={() => {
+              setDataType('emails');
+              // console.log(window.getComputedStyle(btnEmailsRef.current).backgroundColor);
+            }}
+            // ref={btnEmailsRef}
             type="button"
           >
             Emails
@@ -57,6 +50,7 @@ const Modal = ({ visibleData, onCloseModal }) => {
             className={`tab-btn ${dataType === 'users' ? 'active' : ''}`}
             onClick={() => setDataType('users')}
             type="button"
+            // ref={btnUsersRef}
           >
             Users
           </button>
@@ -70,6 +64,7 @@ const Modal = ({ visibleData, onCloseModal }) => {
         </div>
 
         <h2>Active dataType: {dataType}</h2>
+        {!Array.isArray(visibleData) && JSON.stringify(visibleData, null, 2)}
         {dataType === 'emails' && (
           <ul>
             {Array.isArray(visibleData) &&

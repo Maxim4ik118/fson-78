@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { MutatingDots } from 'react-loader-spinner';
 import { toast } from 'react-toastify';
 
@@ -8,6 +8,8 @@ import Modal from './Modal/Modal';
 
 // import booksData from '../books.json';
 import { fetchPostDetails, fetchPosts } from 'services/api';
+import BookList from './BookList/BookList';
+import { BookContext } from 'context/BooksContext';
 
 // const books = booksData.books;
 
@@ -23,78 +25,87 @@ const toastConfig = {
 };
 
 export const App = () => {
-  const [modal, setModal] = useState({ isOpen: false, visibleData: null });
-  const [posts, setPosts] = useState([]);
+  // const [modal, setModal] = useState({ isOpen: false, visibleData: null });
+  const [posts, setPosts] = useState(
+    () => JSON.parse(localStorage.getItem('posts')) ?? []
+  );
+  const [books, setBooks] = useState(
+    () => JSON.parse(localStorage.getItem('books')) ?? []
+  );
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [selectedPostId, setSelectedPostId] = useState(null);
+  // const firtRenderRef = useRef(true);
+  const { modal, onCloseModal } = useContext(BookContext);
 
-  const onOpenModal = data => {
-    setModal({
-      isOpen: true,
-      visibleData: data,
-    });
-  };
+  const onRemoveBook = () => {};
 
-  const onCloseModal = () => {
-    setModal({
-      isOpen: false,
-      visibleData: null,
-    });
-  };
+  // const onOpenModal = data => {
+  //   setModal({
+  //     isOpen: true,
+  //     visibleData: data,
+  //   });
+  // };
 
-  const onSelectPostId = postId => {
-    setSelectedPostId(postId);
-  };
+  // const onCloseModal = () => {
+  //   setModal({
+  //     isOpen: false,
+  //     visibleData: null,
+  //   });
+  // };
 
-  useEffect(() => {
-    const fetchPostsData = async () => {
-      try {
-        setIsLoading(true);
+  // const onSelectPostId = postId => {
+  //   setSelectedPostId(postId);
+  // };
 
-        const posts = await fetchPosts();
+  // useEffect(() => {
+  //   const fetchPostsData = async () => {
+  //     try {
+  //       setIsLoading(true);
 
-        setPosts(posts);
-        toast.success('Your posts were successfully fetched!', toastConfig);
-      } catch (error) {
-        setError(error.message);
-        toast.error(error.message, toastConfig);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  //       const posts = await fetchPosts();
 
-    fetchPostsData();
-  }, []);
+  //       setPosts(posts);
+  //       toast.success('Your posts were successfully fetched!', toastConfig);
+  //     } catch (error) {
+  //       setError(error.message);
+  //       toast.error(error.message, toastConfig);
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   };
 
-  useEffect(() => {
-    if (!selectedPostId) return;
+  //   fetchPostsData();
+  // }, []);
 
-    const fetchPostData = async postId => {
-      try {
-        setIsLoading(true);
+  // useEffect(() => {
+  //   // Варіант відхилення виконаннь юзЕффект при першому рендері
+  //   // if (firtRenderRef.current) return () => firtRenderRef.current = false;
+  //   if (!selectedPostId) return;
 
-        const postDetails = await fetchPostDetails(postId);
+  //   const fetchPostData = async postId => {
+  //     try {
+  //       setIsLoading(true);
 
-        onOpenModal(postDetails);
-        toast.success('Post details were successfully fetched!', toastConfig);
-      } catch (error) {
-        setError(error.message);
-        toast.error(error.message, toastConfig);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  //       const postDetails = await fetchPostDetails(postId);
 
-    fetchPostData(selectedPostId);
-  }, [selectedPostId]);
+  //       onOpenModal(postDetails);
+  //       toast.success('Post details were successfully fetched!', toastConfig);
+  //     } catch (error) {
+  //       setError(error.message);
+  //       toast.error(error.message, toastConfig);
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   };
+
+  //   fetchPostData(selectedPostId);
+  // }, [selectedPostId]);
+
 
   return (
     <div>
       <h1>Мій олюблений Реакт😂</h1>
-      {modal.isOpen && (
-        <Modal onCloseModal={onCloseModal} visibleData={modal.visibleData} />
-      )}
       {error !== null && (
         <p className="c-error">
           Oops, some error occured. Please, try again later. Error: {error}
@@ -113,7 +124,11 @@ export const App = () => {
           visible={true}
         />
       )}
-      {posts.length > 0 &&
+      <BookList
+        books={books}
+        onRemoveBook={onRemoveBook}
+      />
+      {/* {posts.length > 0 &&
         posts.map(post => {
           return (
             <button
@@ -127,7 +142,10 @@ export const App = () => {
               <p>{post.body}</p>
             </button>
           );
-        })}
+        })} */}
+      {modal.isOpen && (
+        <Modal onCloseModal={onCloseModal} visibleData={modal.visibleData} />
+      )}
     </div>
   );
 };
