@@ -9,6 +9,13 @@ export const fetchPosts = async () => {
 
 export const fetchPostDetails = async postId => {
   const { data } = await axios.get(
+    `${JSON_PLACEHOLDER_BASE_URL}/posts/${postId}`
+  );
+  return data;
+};
+
+export const fetchPostComments = async postId => {
+  const { data } = await axios.get(
     `${JSON_PLACEHOLDER_BASE_URL}/posts/${postId}/comments`
   );
   return data;

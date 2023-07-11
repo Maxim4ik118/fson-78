@@ -1,16 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { ToastContainer } from 'react-toastify';
+import { BrowserRouter } from 'react-router-dom';
 
 import { App } from 'components/App';
 
 import 'react-toastify/dist/ReactToastify.css';
 import './index.css';
-import { BookContextProvider } from 'context/BooksContext';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  // <React.StrictMode>
-  <BookContextProvider>
+  <BrowserRouter
+  // basename='/goit-react-hw-05'
+  >
     <App />
     <ToastContainer
       position="top-center"
@@ -24,6 +25,5 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       pauseOnHover
       theme="dark"
     />
-  </BookContextProvider>
-  // </React.StrictMode>
+  </BrowserRouter>
 );
