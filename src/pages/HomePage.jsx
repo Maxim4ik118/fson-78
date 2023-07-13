@@ -1,48 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { MutatingDots } from 'react-loader-spinner';
 import { Link } from 'react-router-dom';
-import { toast } from 'react-toastify';
 
-import { fetchPostDetails, fetchPosts } from 'services/api';
+import useGetPosts from 'hooks/useGetPosts';
 
-const toastConfig = {
-  position: 'top-center',
-  autoClose: 5000,
-  hideProgressBar: false,
-  closeOnClick: true,
-  pauseOnHover: true,
-  draggable: true,
-  progress: undefined,
-  theme: 'dark',
-};
-
-export const HomePage = () => {
-  const [posts, setPosts] = useState(
-    () => JSON.parse(localStorage.getItem('posts')) ?? []
-  );
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const fetchPostsData = async () => {
-      try {
-        setIsLoading(true);
-
-        const posts = await fetchPosts();
-
-        setPosts(posts);
-        toast.success('Your posts were successfully fetched!', toastConfig);
-      } catch (error) {
-        setError(error.message);
-        toast.error(error.message, toastConfig);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchPostsData();
-  }, []);
-
+const HomePage = () => {
+  const { posts, isLoading, error } = useGetPosts({ someData: 'Privet' });
 
   return (
     <div>
@@ -79,3 +42,5 @@ export const HomePage = () => {
     </div>
   );
 };
+
+export default HomePage;

@@ -1,9 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { Suspense, lazy, useEffect, useRef, useState } from 'react';
 import { MutatingDots } from 'react-loader-spinner';
-import { NavLink, Route, Routes, useParams } from 'react-router-dom';
+import {
+  Link,
+  NavLink,
+  Route,
+  Routes,
+  useLocation,
+  useParams,
+} from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { fetchPostDetails } from 'services/api';
-import CommentsPage from './CommentsPage';
+// import CommentsPage from './CommentsPage';
+
+const CommentsPage = lazy(() => import('./CommentsPage'));
 
 const toastConfig = {
   position: 'top-center',
@@ -21,6 +30,8 @@ const PostDetails = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const { postId } = useParams();
+  const location = useLocation();
+  const backLickHref = useRef(location.state?.from ?? '/');
 
   useEffect(() => {
     if (!postId) return;
@@ -46,6 +57,7 @@ const PostDetails = () => {
   return (
     <div>
       <h1>PostDetails</h1>
+      <Link to={backLickHref.current}>Go back</Link>
       {error !== null && (
         <p className="c-error">
           Oops, some error occured. Please, try again later. Error: {error}
@@ -74,9 +86,25 @@ const PostDetails = () => {
           </div>
         </div>
       )}
-      <Routes>
-        <Route path="comments" element={<CommentsPage />} />
-      </Routes>
+      <Suspense
+        fallback={
+          <MutatingDots
+            height="100"
+            width="100"
+            color="#5800a5"
+            secondaryColor="#e08e00"
+            radius="12.5"
+            ariaLabel="mutating-dots-loading"
+            wrapperStyle={{}}
+            wrapperClass=""
+            visible={true}
+          />
+        }
+      >
+        <Routes>
+          <Route path="comments" element={<CommentsPage />} />
+        </Routes>{' '}
+      </Suspense>
     </div>
   );
 };
