@@ -31,7 +31,7 @@ const PostDetails = () => {
   const [error, setError] = useState(null);
   const { postId } = useParams();
   const location = useLocation();
-  const backLickHref = useRef(location.state?.from ?? '/');
+  const backLinkHref = useRef(location.state?.from ?? '/');
 
   useEffect(() => {
     if (!postId) return;
@@ -57,7 +57,7 @@ const PostDetails = () => {
   return (
     <div>
       <h1>PostDetails</h1>
-      <Link to={backLickHref.current}>Go back</Link>
+      <Link to={backLinkHref.current}>Go back</Link>
       {error !== null && (
         <p className="c-error">
           Oops, some error occured. Please, try again later. Error: {error}
