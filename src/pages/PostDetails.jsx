@@ -1,5 +1,6 @@
-import React, { Suspense, lazy, useEffect, useRef, useState } from 'react';
+import React, { Suspense, lazy, useEffect, useRef } from 'react';
 import { MutatingDots } from 'react-loader-spinner';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   Link,
   NavLink,
@@ -9,8 +10,9 @@ import {
   useParams,
 } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { setError, setIsLoading, setPostDetails } from 'redux/postDetailsReducer';
+
 import { fetchPostDetails } from 'services/api';
-// import CommentsPage from './CommentsPage';
 
 const CommentsPage = lazy(() => import('./CommentsPage'));
 
@@ -24,11 +26,39 @@ const toastConfig = {
   progress: undefined,
   theme: 'dark',
 };
+// CTRL + SHIFT + L
+
+// Робота з редаксом:
+// 1. Встановити бібліотеку redux та react-redux
+// 2. Сконфігурувати "store"
+// 3. Зв'язати наш "store" з React додатком, через <Provider store={store}>
+// 4. Створити редьюсер з початковим стейтом і
+//    підключити цей редьюсер до "store" за допомогою "combineReducers"
+// 5. Описати для кожної дії в редьюсері свій обробник/кейс/протокол
+// 6. Підписатися на стейт безпосередньо в середині компоненти, за допомогою
+//    "useSelector"
+// 7. Отримати логістичну функцію "dispatch" за допомогою хука "useDispatch()"
+// 8. Задіспатчити екшин(Надіслати інструкцію до редьюсеру) dispatch({ type: 'categories/setCategoryList', payload: catList })
+// NOTE: Action - це об'єкт, в якого має бути обов'язкове поле type,
+//       ще може бути payload - він не обов'язковий.
+//       Редьюсер - це чиста функція, яка приймає в себе "state" та "action"
+//       і повертає змінений стан.
+//       dispatch - це логістична функція, яка приймає в себе "action"
+//       і доставляє його до редьюсеру.
 
 const PostDetails = () => {
-  const [postDetails, setPostDetails] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+  // const [postDetails, setPostDetails] = useState(null);
+  // const [isLoading, setIsLoading] = useState(false);
+  // const [error, setError] = useState(null);
+  // const { postDetails, isLoading, error } = useSelector(
+  //   state => state.postDetails
+  // );
+
+  const postDetails = useSelector(state => state.postDetails.postDetails);
+  const isLoading = useSelector(state => state.postDetails.isLoading);
+  const error = useSelector(state => state.postDetails.error);
+  const dispatch = useDispatch();
+
   const { postId } = useParams();
   const location = useLocation();
   const backLinkHref = useRef(location.state?.from ?? '/');
@@ -38,21 +68,24 @@ const PostDetails = () => {
 
     const fetchPostData = async () => {
       try {
-        setIsLoading(true);
+        dispatch(setIsLoading(true));
 
         const postData = await fetchPostDetails(postId);
-        setPostDetails(postData);
+        dispatch(setPostDetails(postData));
+
         toast.success('Post details were successfully fetched!', toastConfig);
       } catch (error) {
-        setError(error.message);
+        // dispatch({ type: 'postDetails/setError', payload: error.message });
+        dispatch(setError(error.message));
+
         toast.error(error.message, toastConfig);
       } finally {
-        setIsLoading(false);
+        dispatch(setIsLoading(false));
       }
     };
 
     fetchPostData();
-  }, [postId]);
+  }, [postId, dispatch]);
 
   return (
     <div>
@@ -83,6 +116,9 @@ const PostDetails = () => {
           <p>Body: {postDetails.body}</p>
           <div>
             <NavLink to="comments">Comments</NavLink>
+            {/* /posts/:postId/comments */}
+            <NavLink to="/comments">Comments</NavLink>
+            {/* /comments */}
           </div>
         </div>
       )}

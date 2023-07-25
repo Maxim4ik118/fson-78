@@ -4,7 +4,6 @@ import { MutatingDots } from 'react-loader-spinner';
 
 // import HomePage from 'pages/HomePage';
 // import PostDetails from 'pages/PostDetails';
-// import SearchPage from 'pages/SearchPage';
 
 const HomePage = lazy(() => import('pages/HomePage'));
 const PostDetails = lazy(() => import('pages/PostDetails'));
