@@ -6,29 +6,32 @@ import { Provider } from 'react-redux';
 
 import { App } from 'components/App';
 
-import { store } from 'redux/store';
+import { persistor, store } from 'redux/store';
 
 import 'react-toastify/dist/ReactToastify.css';
 import './index.css';
+import { PersistGate } from 'redux-persist/integration/react';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <Provider store={store}>
-    <BrowserRouter
-    // basename='/goit-react-hw-05'
-    >
-      <App />
-      <ToastContainer
-        position="top-center"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="dark"
-      />
-    </BrowserRouter>
+    <PersistGate loading={<p>loading...</p>} persistor={persistor}>
+      <BrowserRouter
+      // basename='/goit-react-hw-05'
+      >
+        <App />
+        <ToastContainer
+          position="top-center"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="dark"
+        />
+      </BrowserRouter>{' '}
+    </PersistGate>
   </Provider>
 );

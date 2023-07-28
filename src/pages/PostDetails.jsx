@@ -10,7 +10,12 @@ import {
   useParams,
 } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { setError, setIsLoading, setPostDetails } from 'redux/postDetailsReducer';
+import {
+  incrementCounter,
+  setError,
+  setIsLoading,
+  setPostDetails,
+} from 'redux/postDetailsReducer';
 
 import { fetchPostDetails } from 'services/api';
 
@@ -47,16 +52,10 @@ const toastConfig = {
 //       і доставляє його до редьюсеру.
 
 const PostDetails = () => {
-  // const [postDetails, setPostDetails] = useState(null);
-  // const [isLoading, setIsLoading] = useState(false);
-  // const [error, setError] = useState(null);
-  // const { postDetails, isLoading, error } = useSelector(
-  //   state => state.postDetails
-  // );
-
   const postDetails = useSelector(state => state.postDetails.postDetails);
   const isLoading = useSelector(state => state.postDetails.isLoading);
   const error = useSelector(state => state.postDetails.error);
+  const counterValue = useSelector(state => state.postDetails.counterValue);
   const dispatch = useDispatch();
 
   const { postId } = useParams();
@@ -90,6 +89,9 @@ const PostDetails = () => {
   return (
     <div>
       <h1>PostDetails</h1>
+      <button onClick={() => dispatch(incrementCounter())}>
+        Click to icrement counter: {counterValue}
+      </button>
       <Link to={backLinkHref.current}>Go back</Link>
       {error !== null && (
         <p className="c-error">
