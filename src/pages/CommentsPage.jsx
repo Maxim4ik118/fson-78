@@ -1,46 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { MutatingDots } from 'react-loader-spinner';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import { fetchPostComments } from 'services/api';
 
-const toastConfig = {
-  position: 'top-center',
-  autoClose: 5000,
-  hideProgressBar: false,
-  closeOnClick: true,
-  pauseOnHover: true,
-  draggable: true,
-  progress: undefined,
-  theme: 'dark',
-};
+import { fetchCommentsThunk } from 'redux/commentsReducer';
 
 const CommentsPage = () => {
-  const [comments, setComments] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const dispatch = useDispatch();
+  const { comments, isLoading, error } = useSelector(state => state.comments);
   const { postId } = useParams();
 
   useEffect(() => {
     if (!postId) return;
 
-    const fetchPostData = async () => {
-      try {
-        setIsLoading(true);
-
-        const comments = await fetchPostComments(postId);
-        setComments(comments);
-        toast.success('Post details were successfully fetched!', toastConfig);
-      } catch (error) {
-        setError(error.message);
-        toast.error(error.message, toastConfig);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchPostData();
-  }, [postId]);
+    dispatch(fetchCommentsThunk(postId))
+  }, [postId, dispatch]);
 
   return (
     <div>

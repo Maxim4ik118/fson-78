@@ -1,4 +1,5 @@
-import { createSlice } from '@reduxjs/toolkit';
+import {  createSlice } from '@reduxjs/toolkit';
+import { fetchPostDataThunk } from './postDetailsOperations';
 
 const initialState = {
   postDetails: null,
@@ -12,65 +13,25 @@ const postDetailsSlice = createSlice({
   name: 'postDetails',
   initialState,
   reducers: {
-    setIsLoading: (state, { payload }) => {
-      state.isLoading = payload;
-    },
-    setPostDetails: (state, action) => {
-      state.postDetails = action.payload;
-    },
-    setError: (state, action) => {
-      state.error = action.payload;
-    },
     incrementCounter: state => {
       state.counterValue = state.counterValue + 1;
     },
   },
+  extraReducers: builder =>
+    builder
+      .addCase(fetchPostDataThunk.pending, state => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(fetchPostDataThunk.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.postDetails = action.payload;
+      })
+      .addCase(fetchPostDataThunk.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      }),
 });
 
-export const { setIsLoading, setPostDetails, setError, incrementCounter } =
-  postDetailsSlice.actions;
+export const { incrementCounter } = postDetailsSlice.actions;
 export const postDetailsReducer = postDetailsSlice.reducer;
-
-// export const postDetailsReducer = (state = initialState, action) => {
-//   switch (action.type) {
-//     case 'postDetails/setIsLoading': {
-//       return {
-//         ...state,
-//         isLoading: action.payload,
-//         // toglerTest: !state.toglerTest
-//       };
-//     }
-//     case 'postDetails/setPostDetails': {
-//       return {
-//         ...state,
-//         postDetails: action.payload,
-//       };
-//     }
-//     case 'postDetails/setError': {
-//       return {
-//         ...state,
-//         error: action.payload,
-//       };
-//     }
-//     default:
-//       return state;
-//   }
-// };
-// export const setIsLoading = payload => {
-//   return {
-//     type: 'postDetails/setIsLoading',
-//     payload,
-//   };
-// };
-// export const setPostDetails = payload => {
-//   return {
-//     type: 'postDetails/setPostDetails',
-//     payload,
-//   };
-// };
-// export const setError = payload => {
-//   return {
-//     type: 'postDetails/setError',
-//     payload,
-//   };
-// };
