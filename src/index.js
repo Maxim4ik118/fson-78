@@ -4,7 +4,7 @@ import { ToastContainer } from 'react-toastify';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 
-import { App } from 'components/App';
+import { App } from 'App';
 
 import { persistor, store } from 'redux/store';
 

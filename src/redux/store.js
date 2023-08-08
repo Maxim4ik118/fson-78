@@ -11,19 +11,17 @@ import {
 } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 
-import { postDetailsReducer } from './postDetailsReducer';
-import { commentsReducer } from './commentsReducer';
+import { authReducer } from './authReducer';
 
-const postDetailsPersistConfig = {
-  key: 'postDetails',
+const authPersistConfig = {
+  key: 'auth',
   storage,
-  whitelist: ['counterValue'],
+  whitelist: ['token'],
 };
 
 export const store = configureStore({
   reducer: {
-    postDetails: persistReducer(postDetailsPersistConfig, postDetailsReducer),
-    comments: commentsReducer,
+    auth: persistReducer(authPersistConfig, authReducer),
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
