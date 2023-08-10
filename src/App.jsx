@@ -6,6 +6,7 @@ import { StyledNavLink } from 'App.styled';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectAuthentificated, selectToken } from 'redux/authReducer';
 import { logoutUserThunk, refreshUserThunk } from 'redux/operations';
+import PrivateRoute from 'components/PrivateRoute/PrivateRoute';
 
 const HomePage = lazy(() => import('pages/HomePage'));
 const ContactsPage = lazy(() => import('pages/ContactsPage'));
@@ -18,10 +19,10 @@ export const App = () => {
   const authentificated = useSelector(selectAuthentificated);
 
   useEffect(() => {
-    if (!token) return;
+    if (!token || authentificated) return;
 
     dispatch(refreshUserThunk());
-  }, [token, dispatch]);
+  }, [token, dispatch, authentificated]);
 
   const handleLogOut = () => {
     dispatch(logoutUserThunk());
@@ -49,7 +50,14 @@ export const App = () => {
         <Suspense fallback={<Loader />}>
           <Routes>
             <Route path="/" element={<HomePage />} />
-            <Route path="/contacts" element={<ContactsPage />} />
+            <Route
+              path="/contacts"
+              element={
+                <PrivateRoute redirectTo='/login'>
+                  <ContactsPage />
+                </PrivateRoute>
+              }
+            />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
           </Routes>

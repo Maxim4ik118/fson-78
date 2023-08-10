@@ -1,9 +1,12 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { Navigate } from 'react-router-dom';
+import { selectAuthentificated } from 'redux/authReducer';
 import { loginUserThunk } from 'redux/operations';
 
 const LoginPage = () => {
   const dispatch = useDispatch();
+  const authenticated = useSelector(selectAuthentificated);
 
   const handleSubmit = event => {
     event.preventDefault();
@@ -20,6 +23,8 @@ const LoginPage = () => {
       })
     );
   };
+
+  if (authenticated) return <Navigate to="/contacts" />;
 
   return (
     <div>
